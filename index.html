@@ -143,7 +143,7 @@ tailwind.config = {
   <div class="flex items-end justify-between gap-3 mb-4">
     <div>
       <h2 class="font-extrabold text-2xl sm:text-3xl">Portfolio</h2>
-      <p class="text-zinc-400 text-sm mt-1">Wybierz projekt, aby zobaczyć zdjęcia • <span id="count-label">16 projektów • 154 zdjęć</span></p>
+      <p class="text-zinc-400 text-sm mt-1">Wybierz realizację, aby zobaczyć zdjęcia • <span id="count-label">10 realizacji • 154 zdjęć</span></p>
     </div>
   </div>
 
@@ -258,12 +258,13 @@ tailwind.config = {
 
 <script>
 /* ============================================================
-   KONFIGURACJA — projekty w kategoriach (elastyczne N)
-   Jeden projekt = jedna łazienka / jedno pomieszczenie / jedna realizacja.
+   KONFIGURACJA — realizacje (adresy) grupujące serie zdjęć z różnych kategorii
+   Jedna realizacja = jeden adres (pole real), jedna lub wiele serii zdjęć.
    Jeden wpis = cała seria z hurtowej zmiany Windows:
      { prefix:'lazienka1', cat:'lazienki', proj:'laz-1', projLabel:'Łazienka 1', count:33 }
    generuje: images/lazienka1 (1).jpg ... images/lazienka1 (33).jpg
-   Aby dodać zdjęcia: wgraj pliki i podbij count. Nowy projekt = nowa linijka.
+   Aby dodać zdjęcia: wgraj pliki i podbij count. Nowa seria = nowa linijka.
+   Seria może należeć do realizacji (pole real) albo tworzyć własną.
    Projekt może mieć opis ogólny (pole desc) pokazywany nad zdjęciami.
    Podpisy zdjęć dopisz w PHOTO_DESC pod kluczem dokładnej ścieżki pliku.
    Konwencja plików = hurtowa zmiana w Windows:
@@ -274,7 +275,7 @@ const PROJECTS = [
   // --- Łazienki: 83 zdjęcia w 6 projektach ---
   { prefix:'lazienka1', cat:'lazienki', proj:'laz-1', projLabel:'Łazienka 1 – Elegancki marmur ze strefą umywalkową LED', count:33,
     desc:'Projekt wykończenia nowoczesnej łazienki w wysokim standardzie. Aranżacja opiera się na połączeniu wielkoformatowych płyt gresowych imitujących ciemny, wyrazisty kamień naturalny z gładką, jasną glazurą. Wyjątkowy klimat wnętrza buduje precyzyjnie zaprojektowane oświetlenie – liniowe paski LED na suficie, podświetlane okrągłe lustro oraz nowoczesne wiszące oprawy geometryczne.' },
-  { prefix:'lazienka2', cat:'lazienki', proj:'laz-2', projLabel:'Łazienka 2 – Marmur Calacatta ze złotą armaturą i ryflowanym drewnem', count:12,
+  { prefix:'lazienka2', cat:'lazienki', proj:'laz-2', real:'r-laz2', projLabel:'Łazienka 2 – Marmur Calacatta ze złotą armaturą i ryflowanym drewnem', count:12,
     desc:'Projekt Łazienki nr 2 łączący jasny spiek wielkoformatowy z szarym żyłkowaniem (styl Calacatta/Statuario) z wyrazistymi, ryflowanymi płytkami o strukturze drewna. Wnętrze dopełniają szklana kabina ze złotymi profilami, elegancka złota armatura oraz podświetlenie LED wydobywające przestrzenną strukturę okładzin ściennych.' },
   { prefix:'lazienka3', cat:'lazienki', proj:'laz-3', projLabel:'Łazienka 3 – Poddasze w morskim błękicie ze szczotkowanym złotem', count:9,
     desc:'Przestronna łazienka na poddaszu z oknem dachowym, w której rolę akcentu dekoracyjnego pełnią pionowe, błyszczące płytki w odcieniach morskiego błękitu. Wnętrze wyposażono w wolnostojącą wannę z baterią podtynkową oraz kabinę walk-in z odwodnieniem liniowym. Całość uzupełniają detale ze szczotkowanego złota oraz naturalnego drewna dębowego.' },
@@ -282,25 +283,25 @@ const PROJECTS = [
     desc:'Aranżacja łazienki oparta na motywie wielobarwnego lastryko (terrazzo) na jasnym tle, pokrywającego podłogę, ściany oraz zabudowę meblową. Projekt wyposażono w strefę prysznicową walk-in z odpływem liniowym, biały grzejnik drabinkowy oraz estetycznie zacięte pod kątem 45° krawędzie płyt na zabudowie WC.' },
   { prefix:'lazienka5', cat:'lazienki', proj:'laz-5', projLabel:'Łazienka 5 – Industrialny grafit z białą żyłą', count:3,
     desc:'Wykończenie łazienki wielkoformatowymi, grafitowymi płytkami gresowymi z wyraźnym białym żyłkowaniem. Projekt obejmuje montaż kabiny prysznicowej na czarnych profilach, stojącą miskę WC oraz dedykowaną podłączeniowo strefę z instalacją wyrównawczą/buforową.' },
-  { prefix:'lazienka6', cat:'lazienki', proj:'laz-6', projLabel:'Łazienka 6 – Grafitowy beton z podświetlanymi wnękami i cokołem LED', count:24,
+  { prefix:'lazienka6', cat:'lazienki', proj:'laz-6', real:'r-apart', projLabel:'Łazienka 6 – Grafitowy beton z podświetlanymi wnękami i cokołem LED', count:24,
     desc:'Elegancka, kontrastowa łazienka łącząca ciemnografitowe gresy o strukturze betonu z jasnoszarym tłem i ocieplającym drewnem. Cechą charakterystyczną projektu są wielostrefowe podświetlenia LED – podcinana baza wanny, trzypoziomowe wnęki półkowe w drewnie oraz obwodowe podświetlenie lustra.' },
   // --- Płytki i podłogi: pliki podlogi* pokazywane w kategorii "plytki" ---
-  { prefix:'podlogi1', cat:'plytki', proj:'podlogi-1', projLabel:'Podłogi 1', count:6 },
-  { prefix:'podlogi2', cat:'plytki', proj:'podlogi-2', projLabel:'Podłogi 2', count:2 },
+  { prefix:'podlogi1', cat:'plytki', proj:'podlogi-1', real:'r-laz2', projLabel:'Podłogi 1', count:6 },
+  { prefix:'podlogi2', cat:'plytki', proj:'podlogi-2', real:'r-rgb', projLabel:'Podłogi 2', count:2 },
   { prefix:'podlogi3', cat:'plytki', proj:'podlogi-3', projLabel:'Podłogi 3', count:11 },
   // --- Malowanie: 14 zdjęć ---
-  { prefix:'malowanie1', cat:'malowanie', proj:'mal-1', projLabel:'Malowanie 1', count:3 },
-  { prefix:'malowanie2', cat:'malowanie', proj:'mal-2', projLabel:'Sala lekcyjna — remont i malowanie', count:11,
+  { prefix:'malowanie1', cat:'malowanie', proj:'mal-1', real:'r-bom', projLabel:'Malowanie 1', count:3 },
+  { prefix:'malowanie2', cat:'malowanie', proj:'mal-2', real:'r-sala', projLabel:'Sala lekcyjna — remont i malowanie', count:11,
     desc:'Kompleksowe odświeżenie oraz modernizacja sali lekcyjnej w szkole podstawowej. Prace obejmowały pełne zabezpieczenie przestrzeni i wyposażenia, a następnie zmianę przestarzałego, dwukolorowego układu ścian (żółta lamperia) na jednolitą, jasną i nowoczesną kolorystykę. Dzięki usunięciu podziałów i zastosowaniu jasnych barw wnętrze zyskało na przestronności, stało się jaśniejsze oraz bardziej funkcjonalne dla uczniów i nauczycieli.' },
   // --- Oświetlenie: 13 zdjęć ---
-  { prefix:'oswietlenie1', cat:'oswietlenie', proj:'led-1', projLabel:'Apartament — modernistyczne oświetlenie LED', count:11,
+  { prefix:'oswietlenie1', cat:'oswietlenie', proj:'led-1', real:'r-apart', projLabel:'Apartament — modernistyczne oświetlenie LED', count:11,
     desc:'Montaż nowoczesnego, wielostrefowego systemu oświetlenia LED w nowoczesnym mieszkaniu. Projekt opiera się na czarnych profilach natynkowych z podświetleniem obwodowym sufitu, minimalistycznych kinkietach liniowych oraz punktowych reflektorkach natynkowych. Oświetlenie świetnie podkreśla architekturę wnętrza oraz akcentową, zieloną ścianę, tworząc elegancki i klimatyczny nastrój.' },
-  { prefix:'oswietlenie2', cat:'oswietlenie', proj:'led-2', projLabel:'Pokój — sufit z LED RGB', count:2,
+  { prefix:'oswietlenie2', cat:'oswietlenie', proj:'led-2', real:'r-rgb', projLabel:'Pokój — sufit z LED RGB', count:2,
     desc:'Wykonanie sufitu podwieszanego z wielostrefowym, dekoracyjnym oświetleniem LED w pokoju mieszkalnym. Układ obejmuje klasyczne oczka wpuszczane w zabudowę sufitową oraz ukryte we wnękach taśmy LED z możliwością zmiany barwy światła (RGB). Rozwiązanie pozwala na płynną zmianę klimatu pomieszczenia – od funkcjonalnego, ciepłego światła białego po nastrojowe podświetlenie kolorowe.' },
   // --- Zabudowa: 25 zdjęć ---
-  { prefix:'zabudowa1', cat:'zabudowa', proj:'zab-1', projLabel:'Zabudowa 1', count:5 },
-  { prefix:'zabudowa2', cat:'zabudowa', proj:'zab-2', projLabel:'Zabudowa 2', count:5 },
-  { prefix:'zabudowa3', cat:'zabudowa', proj:'zab-3', projLabel:'Zabudowa 3', count:15 },
+  { prefix:'zabudowa1', cat:'zabudowa', proj:'zab-1', real:'r-apart', projLabel:'Zabudowa 1', count:5 },
+  { prefix:'zabudowa2', cat:'zabudowa', proj:'zab-2', real:'r-laz2', projLabel:'Zabudowa 2', count:5 },
+  { prefix:'zabudowa3', cat:'zabudowa', proj:'zab-3', real:'r-rgb', projLabel:'Zabudowa 3', count:15 },
 ];
 /* Podpisy poszczególnych zdjęć (klucz = dokładna ścieżka pliku).
    Brak wpisu = karta i lightbox pokazują samą nazwę projektu. */
@@ -359,14 +360,36 @@ const PHOTO_DESC = {
   'images/oswietlenie2 (1).jpg':'Sufit podwieszany z włączonym ukrytym podświetleniem LED w tonacji neutralnej/ciepłej bieli.',
   'images/oswietlenie2 (2).jpg':'Widok na pomieszczenie z włączonym dekoracyjnym podświetleniem LED w kolorze niebieskim (RGB).',
 };
-const GALLERY = PROJECTS.flatMap(p =>
-  Array.from({ length:p.count }, (_,k)=>{
+/* REALIZACJE — jeden adres, wiele zakresów prac (serie z różnych kategorii).
+   Serie bez pola real tworzą własne, jednoelementowe realizacje.
+   r-laz2: Łazienka 2 + Podłogi 1 + Zabudowa 2
+   r-apart: Łazienka 6 + Apartament LED + Zabudowa 1
+   r-rgb: Pokój LED RGB + Podłogi 2 + Zabudowa 3
+   r-bom: Biuro Obsługi Mieszkańców (Malowanie 1)
+   r-sala: Sala lekcyjna (Malowanie 2) */
+const REALIZATIONS = {
+  'r-laz2': { label:'Łazienka 2 – Calacatta, złoto, podłogi i zabudowa',
+    desc:'Projekt Łazienki nr 2 łączący jasny spiek wielkoformatowy z szarym żyłkowaniem (styl Calacatta/Statuario) z wyrazistymi, ryflowanymi płytkami o strukturze drewna. Wnętrze dopełniają szklana kabina ze złotymi profilami, elegancka złota armatura oraz podświetlenie LED wydobywające przestrzenną strukturę okładzin ściennych. Zakres realizacji obejmował również podłogi oraz zabudowę.' },
+  'r-apart': { label:'Apartament – łazienka, oświetlenie LED i zabudowa',
+    desc:'Montaż nowoczesnego, wielostrefowego systemu oświetlenia LED w nowoczesnym mieszkaniu. Projekt opiera się na czarnych profilach natynkowych z podświetleniem obwodowym sufitu, minimalistycznych kinkietach liniowych oraz punktowych reflektorkach natynkowych. Łazienka w tej samej realizacji łączy ciemnografitowe gresy o strukturze betonu z ocieplającym drewnem oraz wielostrefowe podświetlenia LED – wnęki półkowe, lustro i podcięcie wanny.' },
+  'r-rgb': { label:'Pokój – sufit LED RGB, podłogi i zabudowa',
+    desc:'Wykonanie sufitu podwieszanego z wielostrefowym, dekoracyjnym oświetleniem LED w pokoju mieszkalnym. Układ obejmuje klasyczne oczka wpuszczane w zabudowę sufitową oraz ukryte we wnękach taśmy LED z możliwością zmiany barwy światła (RGB). Zakres realizacji obejmował również podłogi oraz zabudowę.' },
+  'r-bom': { label:'BOM Lublin – remont Biura Obsługi Mieszkańców',
+    desc:'Remont Biura Obsługi Mieszkańców w Lublinie – odświeżenie i malowanie pomieszczeń biurowych.' },
+};
+const GALLERY = PROJECTS.flatMap(p => {
+  const real = p.real || p.proj;
+  const R = REALIZATIONS[real] || {};
+  const realLabel = R.label || p.projLabel;
+  const realDesc = R.desc || p.desc || '';
+  return Array.from({ length:p.count }, (_,k)=>{
     const src = `images/${p.prefix} (${k+1}).jpg`;
-    return { src, cat:p.cat, proj:p.proj, projLabel:p.projLabel, pdesc:p.desc||'', desc:PHOTO_DESC[src]||'' };
-  })
-);
+    return { src, cat:p.cat, proj:p.proj, projLabel:p.projLabel, real, realLabel, pdesc:realDesc, desc:PHOTO_DESC[src]||'' };
+  });
+});
 
 const CAT_LABEL = { lazienki:'Łazienki', plytki:'Płytki i Podłogi', malowanie:'Malowanie i Szpachlowanie', oswietlenie:'Oświetlenie', zabudowa:'Zabudowa' };
+const CAT_SHORT = { lazienki:'Łazienki', plytki:'Podłogi', malowanie:'Malowanie', oswietlenie:'Oświetlenie', zabudowa:'Zabudowa' };
 const CAT_ICON = { lazienki:'fa-bath', plytki:'fa-layer-group', malowanie:'fa-paint-roller', oswietlenie:'fa-lightbulb', zabudowa:'fa-door-closed' };
 
 /* Wiadomość kontaktowa — kodowana przez encodeURIComponent (polskie znaki) */
@@ -383,14 +406,14 @@ const grid = document.getElementById('grid');
 const subWrap = document.getElementById('subfilters');
 const countLabel = document.getElementById('count-label');
 let activeFilter = 'all';
-let activeProj = 'all';
+let activeReal = 'all';
 
 function projectsForCat(cat){
   const map = new Map();
   GALLERY.forEach(it=>{
     if(it.cat!==cat) return;
-    if(!map.has(it.proj)) map.set(it.proj, { proj:it.proj, label:it.projLabel||it.proj, count:0 });
-    map.get(it.proj).count++;
+    if(!map.has(it.real)) map.set(it.real, { real:it.real, label:it.realLabel||it.real, count:0 });
+    map.get(it.real).count++;
   });
   return [...map.values()];
 }
@@ -410,10 +433,10 @@ function renderSubfilters(){
   subWrap.classList.remove('hidden');
   const total = projs.reduce((a,p)=>a+p.count,0);
   subWrap.innerHTML =
-    `<button data-proj="all" class="${activeProj==='all'?'sub-active':''} shrink-0 border border-white/15 rounded-full px-4 h-10 text-xs font-bold bg-white/5 transition">Wszystkie (${total})</button>` +
-    projs.map(p=>`<button data-proj="${p.proj}" class="${activeProj===p.proj?'sub-active':''} shrink-0 border border-white/15 rounded-full px-4 h-10 text-xs font-bold bg-white/5 transition">${p.label} (${p.count})</button>`).join('');
-  subWrap.querySelectorAll('[data-proj]').forEach(b=>{
-    b.addEventListener('click', ()=>{ activeProj = b.dataset.proj; render(false); centerEl(b); });
+    `<button data-real="all" class="${activeReal==='all'?'sub-active':''} shrink-0 border border-white/15 rounded-full px-4 h-10 text-xs font-bold bg-white/5 transition">Wszystkie (${total})</button>` +
+    projs.map(p=>`<button data-real="${p.real}" class="${activeReal===p.real?'sub-active':''} shrink-0 border border-white/15 rounded-full px-4 h-10 text-xs font-bold bg-white/5 transition">${p.label} (${p.count})</button>`).join('');
+  subWrap.querySelectorAll('[data-real]').forEach(b=>{
+    b.addEventListener('click', ()=>{ activeReal = b.dataset.real; render(false); centerEl(b); });
   });
   centerEl(subWrap.querySelector('.sub-active'));
 }
@@ -449,14 +472,14 @@ function groupHeaderHTML(proj, label, cat, n){
 function coverHTML(g){
   const first = g.items[0];
   return `
-  <button data-cover="${g.proj}" class="group relative rounded-2xl overflow-hidden border border-white/10 bg-card shadow-premium text-left w-full active:scale-[.99] transition">
+  <button data-cover="${g.real}" class="group relative rounded-2xl overflow-hidden border border-white/10 bg-card shadow-premium text-left w-full active:scale-[.99] transition">
     <div class="img-fallback relative aspect-[16/10] flex items-center justify-center overflow-hidden">
       <i class="fa-regular fa-image text-3xl text-zinc-600 absolute"></i>
       <img src="${first.src}" alt="${g.label} — Dariusz Żurek" loading="lazy" decoding="async"
            class="cover-img absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
       <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
       <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 text-[11px] font-extrabold tracking-wide bg-black/65 backdrop-blur border border-white/15 rounded-full px-3 py-1">
-        <i class="fa-solid ${CAT_ICON[g.cat]} text-emerald-400"></i>${CAT_LABEL[g.cat]}
+        <i class="fa-solid ${g.badgeIcon} text-emerald-400"></i>${g.badge}
       </span>
       <span class="absolute top-3 right-3 text-[11px] font-extrabold bg-emerald-500 text-zinc-950 rounded-full px-3 py-1">${g.items.length} zdjęć</span>
       <span class="absolute bottom-0 inset-x-0 p-4 flex items-end justify-between gap-2">
@@ -480,44 +503,50 @@ function backBtnHTML(label){
 function render(scroll=true){
   renderSubfilters();
   const withIdx = GALLERY.map((it,i)=>({...it, i}));
-  const filtered = withIdx.filter(it =>
-    (activeFilter==='all' || it.cat===activeFilter) &&
-    (activeProj==='all' || it.proj===activeProj)
-  );
-  // grupuj zachowując kolejność: po proj, a w "all" po cat+proj
-  const groups = new Map();
-  filtered.forEach(it=>{
-    const key = activeFilter==='all' ? it.cat+'||'+it.proj : it.proj;
-    if(!groups.has(key)) groups.set(key, { cat:it.cat, proj:it.proj, label:it.projLabel||it.proj, pdesc:it.pdesc||'', items:[] });
-    groups.get(key).items.push(it);
-  });
-  const list = [...groups.values()];
-  // WIDOK OKŁADEK: przegląd projektów (1 projekt = 1 karta) — wygodnie na telefon
-  if(activeProj==='all'){
+  // WIDOK OKŁADEK: 1 realizacja = 1 karta (w kategorii: tylko zdjęcia z tej kategorii)
+  if(activeReal==='all'){
+    const scoped = withIdx.filter(it => activeFilter==='all' || it.cat===activeFilter);
+    const groups = new Map();
+    scoped.forEach(it=>{
+      if(!groups.has(it.real)) groups.set(it.real, { real:it.real, label:it.realLabel||it.real, pdesc:it.pdesc||'', items:[], cats:[] });
+      const g = groups.get(it.real);
+      if(!g.cats.includes(it.cat)) g.cats.push(it.cat);
+      g.items.push(it);
+    });
+    const list = [...groups.values()];
+    list.forEach(g=>{
+      g.badge = activeFilter==='all' ? g.cats.map(c=>CAT_SHORT[c]).join(' + ') : CAT_LABEL[activeFilter];
+      g.badgeIcon = activeFilter==='all' ? 'fa-diagram-project' : CAT_ICON[activeFilter];
+    });
     grid.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">` +
       list.map(g=>coverHTML(g)).join('') + `</div>` ||
-      `<p class="text-zinc-500 text-sm">Brak zdjęć w tym projekcie.</p>`;
+      `<p class="text-zinc-500 text-sm">Brak realizacji w tej kategorii.</p>`;
+    const n = scoped.length, nReal = list.length;
+    countLabel.textContent = nReal + (nReal===1?' realizacja':(nReal%10>=2&&nReal%10<=4&&(nReal%100<12||nReal%100>14)?' realizacje':' realizacji')) + ' • ' + n + ' zdjęć';
   } else {
-  // WIDOK ZDJĘĆ: jeden projekt, doklejanie po 9 (telefon nie ładuje 33 naraz)
-    grid.innerHTML = list.map(g=>{
-      const shown = shownFor(g.proj, g.items.length);
-      const slice = g.items.slice(0, shown);
-      return `<section>
-        ${backBtnHTML('Wszystkie projekty')}
-        ${groupHeaderHTML(g.proj, (activeFilter==='all' ? CAT_LABEL[g.cat]+' • ' : '') + g.label, g.cat, g.items.length)}
-        ${g.pdesc ? `<p class="text-sm text-zinc-300 leading-relaxed mb-4 max-w-3xl">${g.pdesc}</p>` : ''}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          ${slice.map(it=>cardHTML(it, it.i)).join('')}
-        </div>
-        ${moreBtnHTML(g, shown)}
-      </section>`;
-    }).join('') || `<p class="text-zinc-500 text-sm">Brak zdjęć w tym projekcie.</p>`;
+  // WIDOK ZDJĘĆ: cała realizacja (wszystkie zakresy), pogrupowane seriami, doklejanie po 9
+    const all = withIdx.filter(it => it.real===activeReal);
+    const series = new Map();
+    all.forEach(it=>{
+      if(!series.has(it.proj)) series.set(it.proj, { cat:it.cat, proj:it.proj, label:it.projLabel||it.proj, items:[] });
+      series.get(it.proj).items.push(it);
+    });
+    const slist = [...series.values()];
+    const head = all[0] || { realLabel:'Realizacja', cat:'lazienki', pdesc:'' };
+    grid.innerHTML = `<section>
+        ${backBtnHTML('Wszystkie realizacje')}
+        ${groupHeaderHTML(head.real, head.realLabel, head.cat, all.length)}
+        ${head.pdesc ? `<p class="text-sm text-zinc-300 leading-relaxed mb-4 max-w-3xl">${head.pdesc}</p>` : ''}` +
+      slist.map(s=>{
+        const shown = shownFor(s.proj, s.items.length);
+        const slice = s.items.slice(0, shown);
+        const sub = slist.length>1
+          ? `<h4 class="font-bold text-sm text-zinc-200 mt-6 first:mt-0 mb-3 flex items-center gap-2"><i class="fa-solid ${CAT_ICON[s.cat]} text-emerald-400 text-xs"></i>${s.label} <span class="text-zinc-500 font-semibold">• ${s.items.length} zdjęć</span></h4>` : '';
+        return sub + `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">` +
+          slice.map(it=>cardHTML(it, it.i)).join('') + `</div>` + moreBtnHTML(s, shown);
+      }).join('') + `</section>` || `<p class="text-zinc-500 text-sm">Brak zdjęć w tej realizacji.</p>`;
+    countLabel.textContent = all.length + (all.length===1?' zdjęcie':(all.length%10>=2&&all.length%10<=4&&(all.length%100<12||all.length%100>14)?' zdjęcia':' zdjęć'));
   }
-  const n = filtered.length;
-  const nProj = list.length;
-  countLabel.textContent = activeProj==='all'
-    ? nProj + (nProj===1?' projekt':(nProj%10>=2&&nProj%10<=4&&(nProj%100<12||nProj%100>14)?' projekty':' projektów')) + ' • ' + n + ' zdjęć'
-    : n + (n===1?' zdjęcie':(n%10>=2&&n%10<=4&&(n%100<12||n%100>14)?' zdjęcia':' zdjęć'));
   bindCards();
   bindCovers();
   if(scroll) grid.scrollIntoView({behavior:'smooth', block:'start'});
@@ -525,13 +554,12 @@ function render(scroll=true){
 
 function visibleItems(){
   return GALLERY.map((it,i)=>({...it, i})).filter(it =>
-    (activeFilter==='all' || it.cat===activeFilter) &&
-    (activeProj==='all' || it.proj===activeProj)
+    activeReal==='all' || it.real===activeReal
   );
 }
 
 function applyFilter(f, silent){
-  activeFilter = f; activeProj = 'all';
+  activeFilter = f; activeReal = 'all';
   document.querySelectorAll('[data-filter]').forEach(b=>{
     b.classList.toggle('tab-active', b.dataset.filter===f);
     if(b.dataset.filter===f) centerEl(b);
@@ -546,13 +574,13 @@ document.querySelectorAll('[data-filter]').forEach(b=>{
 function bindCovers(){
   grid.querySelectorAll('[data-cover]').forEach(c=>{
     c.addEventListener('click', ()=>{
-      activeProj = c.dataset.cover;
+      activeReal = c.dataset.cover;
       render(false);
       document.getElementById('galeria').scrollIntoView({behavior:'smooth', block:'start'});
     });
   });
   const back = grid.querySelector('[data-back]');
-  if(back) back.addEventListener('click', ()=>{ activeProj = 'all'; render(false); });
+  if(back) back.addEventListener('click', ()=>{ activeReal = 'all'; render(false); });
   grid.querySelectorAll('[data-more]').forEach(b=>{
     b.addEventListener('click', ()=>{
       const p = b.dataset.more;
