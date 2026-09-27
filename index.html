@@ -54,7 +54,7 @@ tailwind.config = {
   .group:hover .card-img, .group:active .card-img{transform:scale(1.07)}
   .fade-item{transition:opacity .35s ease, transform .35s ease}
   .fade-hide{opacity:0;transform:scale(.97);pointer-events:none;position:absolute;visibility:hidden}
-  .tab-active{background:#10b981!important;color:#09090b!important;border-color:#10b981!important;font-weight:800}
+  .tab-active{background:#e4e4e7!important;color:#09090b!important;border-color:#e4e4e7!important;font-weight:800}
   .sub-active{background:#e4e4e7!important;color:#09090b!important;border-color:#e4e4e7!important;font-weight:800}
   /* Mobilne przeglądanie: sticky pasek + snap slider */
   #filterbar{position:sticky;top:64px;z-index:30;background:rgba(9,9,11,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.07)}
@@ -64,6 +64,9 @@ tailwind.config = {
   .fade-x{-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent)}
   .cover-img{transition:transform .6s cubic-bezier(.16,1,.3,1)}
   .group:active .cover-img{transform:scale(1.05)}
+  .tapable{transition:transform .15s ease, border-color .2s ease}
+  .tapable:active{transform:scale(.97)}
+  @media (hover:hover){ .tapable:hover{border-color:rgba(255,255,255,.22)} }
   .clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   /* Before/After slider */
   #ba-wrap{touch-action:none;user-select:none}
@@ -88,7 +91,7 @@ tailwind.config = {
 {"@context":"https://schema.org","@type":"HomeAndConstructionBusiness","name":"Dariusz Żurek - Remonty i Usługi Wykończeniowe","telephone":"+48666522553","areaServed":"Lublin i okolice","openingHours":"Mo-Sa 08:00-18:00","priceRange":"$$"}
 </script>
 </head>
-<body class="bg-ink text-zinc-100 font-sans antialiased pb-20 md:pb-0">
+<body class="bg-ink text-zinc-100 font-sans antialiased pb-28 md:pb-0">
 
 <!-- ===== STICKY HEADER ===== -->
 <header class="fixed top-0 inset-x-0 z-40 bg-[#09090b]/85 backdrop-blur-md border-b border-white/10">
@@ -99,7 +102,7 @@ tailwind.config = {
     </a>
     <div class="flex items-center gap-2">
       <a data-wa href="https://wa.me/48666522553" target="_blank" rel="noopener" aria-label="WhatsApp"
-         class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 items-center justify-center hover:border-emerald-400 hover:text-emerald-300 transition">
+         class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 items-center justify-center hover:border-white/30 hover:text-emerald-300 transition">
         <i class="fa-brands fa-whatsapp text-xl"></i>
       </a>
       <a href="tel:666522553" class="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-extrabold text-sm px-4 sm:px-5 h-11 rounded-full transition shadow-glow">
@@ -119,9 +122,9 @@ tailwind.config = {
   <h1 class="silver-text font-extrabold text-4xl sm:text-5xl md:text-6xl mt-4 leading-tight">Galeria Realizacji</h1>
   <p class="text-zinc-400 mt-3 text-[15px] sm:text-lg max-w-2xl mx-auto">Remonty i wykończenia wnętrz — dokładnie, czysto i na czas.</p>
   <div class="flex items-center justify-center gap-2 sm:gap-3 mt-5 flex-wrap">
-    <span class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm font-bold"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Solidnie</span>
-    <span class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm font-bold"><i class="fa-solid fa-clock text-emerald-400"></i> Terminowo</span>
-    <span class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm font-bold"><i class="fa-solid fa-heart text-emerald-400"></i> Z pasją</span>
+    <span class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm font-bold"><i class="fa-solid fa-shield-halved text-zinc-400"></i> Solidnie</span>
+    <span class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm font-bold"><i class="fa-solid fa-clock text-zinc-400"></i> Terminowo</span>
+    <span class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm font-bold"><i class="fa-solid fa-heart text-zinc-400"></i> Z pasją</span>
   </div>
   <div class="flex gap-3 justify-center mt-7">
     <a href="tel:666522553" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-extrabold rounded-2xl px-7 h-[52px] transition shadow-glow">
@@ -138,41 +141,13 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ===== GALLERY ===== -->
-<section id="galeria" class="max-w-6xl mx-auto px-4 pb-4 scroll-mt-20">
-  <div class="flex items-end justify-between gap-3 mb-4">
-    <div>
-      <h2 class="font-extrabold text-2xl sm:text-3xl">Portfolio</h2>
-      <p class="text-zinc-400 text-sm mt-1">Wybierz realizację, aby zobaczyć zdjęcia • <span id="count-label">10 realizacji • 154 zdjęć</span></p>
-    </div>
-  </div>
-
-  <div id="filterbar" class="-mx-4 px-4 pt-2 pb-2">
-  <div id="tabs" class="snap-row fade-x flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:flex-wrap sm:overflow-visible" role="tablist" aria-label="Filtruj kategorię">
-    <button data-filter="all" class="tab-active shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 transition">Wszystkie</button>
-    <button data-filter="lazienki" class="shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 hover:border-emerald-400 transition"><i class="fa-solid fa-bath mr-1.5 text-emerald-400"></i>Łazienki</button>
-    <button data-filter="plytki" class="shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 hover:border-emerald-400 transition"><i class="fa-solid fa-layer-group mr-1.5 text-emerald-400"></i>Płytki i Podłogi</button>
-    <button data-filter="malowanie" class="shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 hover:border-emerald-400 transition"><i class="fa-solid fa-paint-roller mr-1.5 text-emerald-400"></i>Malowanie i Szpachlowanie</button>
-    <button data-filter="oswietlenie" class="shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 hover:border-emerald-400 transition"><i class="fa-solid fa-lightbulb mr-1.5 text-emerald-400"></i>Oświetlenie</button>
-    <button data-filter="zabudowa" class="shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 hover:border-emerald-400 transition"><i class="fa-solid fa-door-closed mr-1.5 text-emerald-400"></i>Zabudowa</button>
-  </div>
-
-  <!-- Podkategorie-projekty: slider na telefon, pigułki na desktop -->
-  <div id="subfilters" class="snap-row hidden gap-2 overflow-x-auto pb-1 -mx-4 px-4 mt-1 flex"></div>
-  </div>
-  <div id="grid" class="relative space-y-8 mt-4"></div>
-  <p class="text-center text-zinc-500 text-xs mt-6">Masz podobny projekt? <a href="tel:666522553" class="text-emerald-300 font-bold underline underline-offset-4">Zadzwoń — wycena gratis</a></p>
-</section>
-
-<!-- ===== BEFORE / AFTER ===== -->
-<section id="przed-po" class="max-w-6xl mx-auto px-4 py-10 scroll-mt-20">
+<!-- ===== BEFORE / AFTER (efekt WOW zaraz po zeskanowaniu QR) ===== -->
+<section id="przed-po" class="max-w-6xl mx-auto px-4 pt-2 pb-8 scroll-mt-20">
   <div class="rounded-3xl border border-white/10 bg-card overflow-hidden shadow-premium">
-    <div class="p-5 sm:p-8 pb-0 flex flex-wrap items-center justify-between gap-3">
-      <div>
-        <p class="text-[11px] font-extrabold tracking-widest uppercase text-emerald-300"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Przed i Po</p>
-        <h2 class="font-extrabold text-2xl sm:text-3xl mt-1">Zobacz różnicę</h2>
-        <p class="text-zinc-400 text-sm mt-1">Przeciągnij suwak, aby porównać efekt wykończenia.</p>
-      </div>
+    <div class="p-5 sm:p-8 pb-0">
+      <p class="text-[11px] font-extrabold tracking-widest uppercase text-zinc-400">Przed i Po</p>
+      <h2 class="font-extrabold text-2xl sm:text-3xl mt-1">Zobacz różnicę</h2>
+      <p class="text-zinc-400 text-sm mt-1">Przeciągnij suwak, aby porównać efekt wykończenia.</p>
     </div>
     <div class="p-5 sm:p-8">
       <div id="ba-wrap" class="relative rounded-2xl overflow-hidden border border-white/10 aspect-[16/10] sm:aspect-[21/9] select-none" style="--pos:50%">
@@ -186,9 +161,6 @@ tailwind.config = {
           <div class="absolute inset-0 img-fallback flex items-center justify-center"><i class="fa-regular fa-image text-4xl text-zinc-600"></i></div>
           <img id="ba-before-img" src="images/before-01.jpg" alt="Przed remontem" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async">
         </div>
-        <!-- labels -->
-        <span class="absolute top-3 left-3 text-[11px] font-extrabold tracking-widest bg-black/70 border border-white/15 rounded-full px-3 py-1">PRZED</span>
-        <span class="absolute top-3 right-3 text-[11px] font-extrabold tracking-widest bg-emerald-500 text-zinc-950 rounded-full px-3 py-1">PO</span>
         <!-- handle line -->
         <div id="ba-line" class="absolute top-0 bottom-0 w-[2px] bg-white/90" style="left:var(--pos,50%)"></div>
         <div id="ba-handle" class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-11 h-11 rounded-full bg-white text-zinc-950 flex items-center justify-center" style="left:var(--pos,50%)">
@@ -196,8 +168,37 @@ tailwind.config = {
         </div>
         <input id="ba-range" type="range" min="0" max="100" value="50" class="ba-range" aria-label="Suwak porównania przed i po">
       </div>
+      <div class="flex items-center justify-between mt-2 text-[11px] font-bold tracking-widest text-zinc-500">
+        <span>← PRZED</span><span>PO →</span>
+      </div>
     </div>
   </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section id="galeria" class="max-w-6xl mx-auto px-4 pb-4 scroll-mt-20">
+  <div class="flex items-end justify-between gap-3 mb-4">
+    <div>
+      <h2 class="font-extrabold text-2xl sm:text-3xl">Portfolio</h2>
+      <p class="text-zinc-400 text-sm mt-1">Wybierz realizację, aby zobaczyć zdjęcia • <span id="count-label">10 realizacji • 154 zdjęć</span></p>
+    </div>
+  </div>
+
+  <div id="filterbar" class="-mx-4 px-4 pt-2 pb-2">
+  <div id="tabs" class="snap-row fade-x flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:flex-wrap sm:overflow-visible" role="tablist" aria-label="Filtruj kategorię">
+    <button data-filter="all" class="tab-active shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 transition">Wszystkie</button>
+    <button data-filter="lazienki" class="shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 hover:border-white/30 transition"><i class="fa-solid fa-bath mr-1.5 text-zinc-400"></i>Łazienki</button>
+    <button data-filter="plytki" class="shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 hover:border-white/30 transition"><i class="fa-solid fa-layer-group mr-1.5 text-zinc-400"></i>Płytki i Podłogi</button>
+    <button data-filter="malowanie" class="shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 hover:border-white/30 transition"><i class="fa-solid fa-paint-roller mr-1.5 text-zinc-400"></i>Malowanie i Szpachlowanie</button>
+    <button data-filter="oswietlenie" class="shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 hover:border-white/30 transition"><i class="fa-solid fa-lightbulb mr-1.5 text-zinc-400"></i>Oświetlenie</button>
+    <button data-filter="zabudowa" class="shrink-0 border border-white/15 rounded-full px-5 h-11 text-sm font-bold bg-white/5 hover:border-white/30 transition"><i class="fa-solid fa-door-closed mr-1.5 text-zinc-400"></i>Zabudowa</button>
+  </div>
+
+  <!-- Podkategorie-projekty: slider na telefon, pigułki na desktop -->
+  <div id="subfilters" class="snap-row hidden gap-2 overflow-x-auto pb-1 -mx-4 px-4 mt-1 flex"></div>
+  </div>
+  <div id="grid" class="relative space-y-8 mt-4"></div>
+  <p class="text-center text-zinc-500 text-xs mt-6">Masz podobny projekt? <a href="tel:666522553" class="text-emerald-300 font-bold underline underline-offset-4">Zadzwoń — wycena gratis</a></p>
 </section>
 
 <!-- ===== SERVICES ===== -->
@@ -205,14 +206,14 @@ tailwind.config = {
   <h2 class="font-extrabold text-2xl sm:text-3xl text-center">Zakres usług</h2>
   <p class="text-zinc-400 text-sm text-center mt-1 mb-6">Od pojedynczego pokoju po wnętrza pod klucz</p>
   <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
-    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-emerald-400/50 transition"><i class="fa-solid fa-paint-roller text-emerald-400 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Malowanie</p><p class="text-zinc-400 text-xs sm:text-sm">Gładzie, kolory, sufity</p></div>
-    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-emerald-400/50 transition"><i class="fa-solid fa-trowel text-emerald-400 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Szpachlowanie</p><p class="text-zinc-400 text-xs sm:text-sm">Gładzie gipsowe na gotowo</p></div>
-    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-emerald-400/50 transition"><i class="fa-solid fa-table-cells-large text-emerald-400 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Płytki / Gres</p><p class="text-zinc-400 text-xs sm:text-sm">Łazienki, kuchnie, podłogi</p></div>
-    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-emerald-400/50 transition"><i class="fa-solid fa-rug text-emerald-400 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Podłogi</p><p class="text-zinc-400 text-xs sm:text-sm">Panele, winyl, listwy</p></div>
-    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-emerald-400/50 transition"><i class="fa-solid fa-bath text-emerald-400 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Remonty łazienek</p><p class="text-zinc-400 text-xs sm:text-sm">Kompleksowo, z hydrauliką</p></div>
-    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-emerald-400/50 transition"><i class="fa-solid fa-lightbulb text-emerald-400 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Oświetlenie</p><p class="text-zinc-400 text-xs sm:text-sm">LED, punkty, kinkiety</p></div>
-    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-emerald-400/50 transition"><i class="fa-solid fa-door-closed text-emerald-400 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Zabudowa</p><p class="text-zinc-400 text-xs sm:text-sm">GK, wnęki, sufity</p></div>
-    <div class="rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-transparent p-4 sm:p-5"><i class="fa-solid fa-key text-emerald-300 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Wnętrza pod klucz</p><p class="text-zinc-300 text-xs sm:text-sm">Całość + sprzątanie po pracy</p></div>
+    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-white/30/50 transition"><i class="fa-solid fa-paint-roller text-zinc-300 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Malowanie</p><p class="text-zinc-400 text-xs sm:text-sm">Gładzie, kolory, sufity</p></div>
+    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-white/30/50 transition"><i class="fa-solid fa-trowel text-zinc-300 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Szpachlowanie</p><p class="text-zinc-400 text-xs sm:text-sm">Gładzie gipsowe na gotowo</p></div>
+    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-white/30/50 transition"><i class="fa-solid fa-table-cells-large text-zinc-300 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Płytki / Gres</p><p class="text-zinc-400 text-xs sm:text-sm">Łazienki, kuchnie, podłogi</p></div>
+    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-white/30/50 transition"><i class="fa-solid fa-rug text-zinc-300 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Podłogi</p><p class="text-zinc-400 text-xs sm:text-sm">Panele, winyl, listwy</p></div>
+    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-white/30/50 transition"><i class="fa-solid fa-bath text-zinc-300 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Remonty łazienek</p><p class="text-zinc-400 text-xs sm:text-sm">Kompleksowo, z hydrauliką</p></div>
+    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-white/30/50 transition"><i class="fa-solid fa-lightbulb text-zinc-300 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Oświetlenie</p><p class="text-zinc-400 text-xs sm:text-sm">LED, punkty, kinkiety</p></div>
+    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5 hover:border-white/30/50 transition"><i class="fa-solid fa-door-closed text-zinc-300 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Zabudowa</p><p class="text-zinc-400 text-xs sm:text-sm">GK, wnęki, sufity</p></div>
+    <div class="rounded-2xl border border-white/10 bg-card p-4 sm:p-5"><i class="fa-solid fa-key text-zinc-300 text-2xl"></i><p class="font-extrabold mt-2 text-sm sm:text-base">Wnętrza pod klucz</p><p class="text-zinc-400 text-xs sm:text-sm">Całość + sprzątanie po pracy</p></div>
   </div>
 </section>
 
@@ -221,10 +222,10 @@ tailwind.config = {
   <div class="rounded-3xl border border-emerald-400/25 bg-gradient-to-b from-emerald-500/10 to-card p-6 sm:p-10 text-center shadow-premium">
     <p class="text-[11px] font-extrabold tracking-widest uppercase text-emerald-300">Kontakt bezpośredni</p>
     <a href="tel:+48666522553" class="block font-extrabold text-4xl sm:text-5xl mt-2 tracking-tight hover:text-emerald-300 transition">666&nbsp;522&nbsp;553</a>
-    <p class="text-zinc-400 text-sm mt-2"><i class="fa-solid fa-location-dot text-emerald-400 mr-1"></i> Lublin i okolice &nbsp;•&nbsp; <i class="fa-regular fa-clock text-emerald-400 mr-1"></i> Pon–Sob: 8:00–18:00</p>
+    <p class="text-zinc-400 text-sm mt-2"><i class="fa-solid fa-location-dot text-zinc-500 mr-1"></i> Lublin i okolice &nbsp;•&nbsp; <i class="fa-regular fa-clock text-zinc-500 mr-1"></i> Pon–Sob: 8:00–18:00</p>
     <div class="grid grid-cols-3 gap-2 sm:gap-3 mt-6 max-w-xl mx-auto">
       <a href="tel:+48666522553" class="inline-flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-extrabold rounded-2xl py-3.5 transition"><i class="fa-solid fa-phone text-lg"></i><span class="text-xs sm:text-base">Zadzwoń</span></a>
-      <a data-sms href="sms:+48666522553" class="inline-flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 bg-white/5 hover:bg-white/10 border border-white/15 rounded-2xl py-3.5 font-bold transition"><i class="fa-solid fa-comment-sms text-lg text-emerald-300"></i><span class="text-xs sm:text-base">SMS</span></a>
+      <a data-sms href="sms:+48666522553" class="inline-flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 bg-white/5 hover:bg-white/10 border border-white/15 rounded-2xl py-3.5 font-bold transition"><i class="fa-solid fa-comment-sms text-lg text-zinc-300"></i><span class="text-xs sm:text-base">SMS</span></a>
       <a data-wa href="https://wa.me/48666522553" target="_blank" rel="noopener" class="inline-flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 bg-white/5 hover:bg-white/10 border border-white/15 rounded-2xl py-3.5 font-bold transition"><i class="fa-brands fa-whatsapp text-lg text-emerald-300"></i><span class="text-xs sm:text-base">WhatsApp</span></a>
     </div>
     <p class="text-zinc-500 text-xs mt-5">Kliknięcie SMS / WhatsApp wstawi gotową wiadomość — wystarczy wysłać.</p>
@@ -233,12 +234,12 @@ tailwind.config = {
 </footer>
 </main>
 
-<!-- ===== STICKY MOBILE CALL BAR ===== -->
-<div class="fixed bottom-0 inset-x-0 z-40 md:hidden bg-[#0c0c0e]/92 backdrop-blur-md border-t border-white/10 px-3 pt-2" style="padding-bottom:calc(.6rem + env(safe-area-inset-bottom))">
+<!-- ===== STICKY MOBILE CALL BAR (kciuk po QR) ===== -->
+<div class="fixed bottom-0 inset-x-0 z-40 md:hidden bg-[#0c0c0e]/95 backdrop-blur-md border-t border-white/10 px-3 pt-2.5" style="padding-bottom:calc(.7rem + env(safe-area-inset-bottom))">
   <div class="grid grid-cols-3 gap-2 max-w-md mx-auto">
-    <a href="tel:+48666522553" class="inline-flex items-center justify-center gap-2 bg-emerald-500 text-zinc-950 font-extrabold rounded-xl h-11 text-sm"><i class="fa-solid fa-phone"></i>Zadzwoń</a>
-    <a data-sms href="sms:+48666522553" class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/15 rounded-xl h-11 text-sm font-bold"><i class="fa-solid fa-comment-sms"></i>SMS</a>
-    <a data-wa href="https://wa.me/48666522553" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/15 rounded-xl h-11 text-sm font-bold"><i class="fa-brands fa-whatsapp text-emerald-300"></i>WhatsApp</a>
+    <a href="tel:+48666522553" class="tapable inline-flex items-center justify-center gap-2 bg-emerald-500 text-zinc-950 font-extrabold rounded-2xl h-14 text-[15px] shadow-glow"><i class="fa-solid fa-phone text-lg"></i>Zadzwoń</a>
+    <a data-sms href="sms:+48666522553" class="tapable inline-flex items-center justify-center gap-2 bg-white/10 border border-white/15 rounded-2xl h-14 text-[15px] font-bold"><i class="fa-solid fa-comment-sms text-lg"></i>SMS</a>
+    <a data-wa href="https://wa.me/48666522553" target="_blank" rel="noopener" class="tapable inline-flex items-center justify-center gap-2 bg-white/10 border border-white/15 rounded-2xl h-14 text-[15px] font-bold"><i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i>WhatsApp</a>
   </div>
 </div>
 
@@ -368,13 +369,19 @@ const PHOTO_DESC = {
    r-bom: Biuro Obsługi Mieszkańców (Malowanie 1)
    r-sala: Sala lekcyjna (Malowanie 2) */
 const REALIZATIONS = {
-  'r-laz2': { label:'Łazienka 2 – Calacatta, złoto, podłogi i zabudowa',
+  'laz-1': { short:'Łazienka w marmurze' },
+  'laz-3': { short:'Błękitna łazienka' },
+  'laz-4': { short:'Łazienka lastryko' },
+  'laz-5': { short:'Grafitowa łazienka' },
+  'podlogi-3': { short:'Podłogi' },
+  'r-sala': { short:'Remont sali' },
+  'r-laz2': { short:'Łazienka Calacatta', label:'Łazienka 2 – Calacatta, złoto, podłogi i zabudowa',
     desc:'Projekt Łazienki nr 2 łączący jasny spiek wielkoformatowy z szarym żyłkowaniem (styl Calacatta/Statuario) z wyrazistymi, ryflowanymi płytkami o strukturze drewna. Wnętrze dopełniają szklana kabina ze złotymi profilami, elegancka złota armatura oraz podświetlenie LED wydobywające przestrzenną strukturę okładzin ściennych. Zakres realizacji obejmował również podłogi oraz zabudowę.' },
-  'r-apart': { label:'Apartament – łazienka, oświetlenie LED i zabudowa',
+  'r-apart': { short:'Oświetlenie LED', label:'Apartament – łazienka, oświetlenie LED i zabudowa',
     desc:'Montaż nowoczesnego, wielostrefowego systemu oświetlenia LED w nowoczesnym mieszkaniu. Projekt opiera się na czarnych profilach natynkowych z podświetleniem obwodowym sufitu, minimalistycznych kinkietach liniowych oraz punktowych reflektorkach natynkowych. Łazienka w tej samej realizacji łączy ciemnografitowe gresy o strukturze betonu z ocieplającym drewnem oraz wielostrefowe podświetlenia LED – wnęki półkowe, lustro i podcięcie wanny.' },
-  'r-rgb': { label:'Pokój – sufit LED RGB, podłogi i zabudowa',
+  'r-rgb': { short:'Sufit LED RGB', label:'Pokój – sufit LED RGB, podłogi i zabudowa',
     desc:'Wykonanie sufitu podwieszanego z wielostrefowym, dekoracyjnym oświetleniem LED w pokoju mieszkalnym. Układ obejmuje klasyczne oczka wpuszczane w zabudowę sufitową oraz ukryte we wnękach taśmy LED z możliwością zmiany barwy światła (RGB). Zakres realizacji obejmował również podłogi oraz zabudowę.' },
-  'r-bom': { label:'BOM Lublin – remont Biura Obsługi Mieszkańców',
+  'r-bom': { short:'Biuro BOM Lublin', label:'BOM Lublin – remont Biura Obsługi Mieszkańców',
     desc:'Remont Biura Obsługi Mieszkańców w Lublinie – odświeżenie i malowanie pomieszczeń biurowych.' },
 };
 const GALLERY = PROJECTS.flatMap(p => {
@@ -384,7 +391,7 @@ const GALLERY = PROJECTS.flatMap(p => {
   const realDesc = R.desc || p.desc || '';
   return Array.from({ length:p.count }, (_,k)=>{
     const src = `images/${p.prefix} (${k+1}).jpg`;
-    return { src, cat:p.cat, proj:p.proj, projLabel:p.projLabel, real, realLabel, pdesc:realDesc, desc:PHOTO_DESC[src]||'' };
+    return { src, cat:p.cat, proj:p.proj, projLabel:p.projLabel, real, realLabel, short:R.short||p.projLabel, pdesc:realDesc, desc:PHOTO_DESC[src]||'' };
   });
 });
 
@@ -412,7 +419,7 @@ function projectsForCat(cat){
   const map = new Map();
   GALLERY.forEach(it=>{
     if(it.cat!==cat) return;
-    if(!map.has(it.real)) map.set(it.real, { real:it.real, label:it.realLabel||it.real, count:0 });
+    if(!map.has(it.real)) map.set(it.real, { real:it.real, label:it.short||it.real, count:0 });
     map.get(it.real).count++;
   });
   return [...map.values()];
@@ -462,7 +469,7 @@ function groupHeaderHTML(proj, label, cat, n){
   return `
   <div class="flex items-center justify-between gap-3 mb-3">
     <h3 class="font-extrabold text-base sm:text-lg flex items-center gap-2 min-w-0">
-      <i class="fa-solid ${CAT_ICON[cat]} text-emerald-400"></i>
+      <i class="fa-solid ${CAT_ICON[cat]} text-zinc-500"></i>
       <span class="truncate">${label}</span>
     </h3>
     <span class="shrink-0 text-[11px] font-bold text-zinc-400 border border-white/10 bg-white/5 rounded-full px-3 py-1">${n} zdjęć</span>
@@ -472,20 +479,15 @@ function groupHeaderHTML(proj, label, cat, n){
 function coverHTML(g){
   const first = g.items[0];
   return `
-  <button data-cover="${g.real}" class="group relative rounded-2xl overflow-hidden border border-white/10 bg-card shadow-premium text-left w-full active:scale-[.99] transition">
-    <div class="img-fallback relative aspect-[16/10] flex items-center justify-center overflow-hidden">
-      <i class="fa-regular fa-image text-3xl text-zinc-600 absolute"></i>
-      <img src="${first.src}" alt="${g.label} — Dariusz Żurek" loading="lazy" decoding="async"
+  <button data-cover="${g.real}" class="tapable group relative rounded-xl overflow-hidden border border-white/10 bg-card text-left w-full" aria-label="Otwórz realizację: ${g.short}">
+    <div class="img-fallback relative aspect-[4/3] flex items-center justify-center overflow-hidden">
+      <i class="fa-regular fa-image text-2xl text-zinc-700 absolute"></i>
+      <img src="${first.src}" alt="${g.short} — Dariusz Żurek" loading="lazy" decoding="async" width="800" height="600"
            class="cover-img absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
-      <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
-      <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 text-[11px] font-extrabold tracking-wide bg-black/65 backdrop-blur border border-white/15 rounded-full px-3 py-1">
-        <i class="fa-solid ${g.badgeIcon} text-emerald-400"></i>${g.badge}
-      </span>
-      <span class="absolute top-3 right-3 text-[11px] font-extrabold bg-emerald-500 text-zinc-950 rounded-full px-3 py-1">${g.items.length} zdjęć</span>
-      <span class="absolute bottom-0 inset-x-0 p-4 flex items-end justify-between gap-2">
-        <span class="font-extrabold text-base sm:text-lg leading-tight">${g.label}</span>
-        <span class="shrink-0 inline-flex items-center gap-1.5 text-xs font-extrabold bg-white text-zinc-950 rounded-full px-3.5 h-9">Zobacz <i class="fa-solid fa-arrow-right"></i></span>
-      </span>
+    </div>
+    <div class="px-2.5 pt-2 pb-2.5">
+      <p class="font-bold text-[13px] sm:text-[15px] leading-tight truncate">${g.short}</p>
+      <p class="text-[11px] text-zinc-500 mt-0.5 truncate">${g.badge} • ${g.items.length} zdjęć</p>
     </div>
   </button>`;
 }
@@ -493,11 +495,11 @@ function coverHTML(g){
 function moreBtnHTML(g, shown){
   const left = g.items.length - shown;
   if(left<=0) return '';
-  return `<button data-more="${g.proj}" class="w-full mt-3 h-12 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 font-extrabold text-sm hover:bg-emerald-500/20 transition">Pokaż więcej (+${left})</button>`;
+  return `<button data-more="${g.proj}" class="w-full mt-3 h-12 rounded-2xl border border-white/15 bg-white/5 font-bold text-sm hover:bg-white/10 transition">Pokaż więcej (+${left})</button>`;
 }
 
 function backBtnHTML(label){
-  return `<button data-back class="mb-4 inline-flex items-center gap-2 h-11 px-5 rounded-full border border-white/15 bg-white/5 font-bold text-sm hover:border-emerald-400 transition"><i class="fa-solid fa-arrow-left text-emerald-400"></i>${label}</button>`;
+  return `<button data-back class="mb-4 inline-flex items-center gap-2 h-11 px-5 rounded-full border border-white/15 bg-white/5 font-bold text-sm hover:border-white/30 transition"><i class="fa-solid fa-arrow-left text-zinc-400"></i>${label}</button>`;
 }
 
 function render(scroll=true){
@@ -508,7 +510,7 @@ function render(scroll=true){
     const scoped = withIdx.filter(it => activeFilter==='all' || it.cat===activeFilter);
     const groups = new Map();
     scoped.forEach(it=>{
-      if(!groups.has(it.real)) groups.set(it.real, { real:it.real, label:it.realLabel||it.real, pdesc:it.pdesc||'', items:[], cats:[] });
+      if(!groups.has(it.real)) groups.set(it.real, { real:it.real, label:it.realLabel||it.real, short:it.short||it.real, pdesc:it.pdesc||'', items:[], cats:[] });
       const g = groups.get(it.real);
       if(!g.cats.includes(it.cat)) g.cats.push(it.cat);
       g.items.push(it);
@@ -518,7 +520,7 @@ function render(scroll=true){
       g.badge = activeFilter==='all' ? g.cats.map(c=>CAT_SHORT[c]).join(' + ') : CAT_LABEL[activeFilter];
       g.badgeIcon = activeFilter==='all' ? 'fa-diagram-project' : CAT_ICON[activeFilter];
     });
-    grid.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">` +
+    grid.innerHTML = `<div class="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">` +
       list.map(g=>coverHTML(g)).join('') + `</div>` ||
       `<p class="text-zinc-500 text-sm">Brak realizacji w tej kategorii.</p>`;
     const n = scoped.length, nReal = list.length;
@@ -541,8 +543,8 @@ function render(scroll=true){
         const shown = shownFor(s.proj, s.items.length);
         const slice = s.items.slice(0, shown);
         const sub = slist.length>1
-          ? `<h4 class="font-bold text-sm text-zinc-200 mt-6 first:mt-0 mb-3 flex items-center gap-2"><i class="fa-solid ${CAT_ICON[s.cat]} text-emerald-400 text-xs"></i>${s.label} <span class="text-zinc-500 font-semibold">• ${s.items.length} zdjęć</span></h4>` : '';
-        return sub + `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">` +
+          ? `<h4 class="font-bold text-sm text-zinc-200 mt-6 first:mt-0 mb-3 flex items-center gap-2"><i class="fa-solid ${CAT_ICON[s.cat]} text-zinc-500 text-xs"></i>${s.label} <span class="text-zinc-500 font-semibold">• ${s.items.length} zdjęć</span></h4>` : '';
+        return sub + `<div class="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">` +
           slice.map(it=>cardHTML(it, it.i)).join('') + `</div>` + moreBtnHTML(s, shown);
       }).join('') + `</section>` || `<p class="text-zinc-500 text-sm">Brak zdjęć w tej realizacji.</p>`;
     countLabel.textContent = all.length + (all.length===1?' zdjęcie':(all.length%10>=2&&all.length%10<=4&&(all.length%100<12||all.length%100>14)?' zdjęcia':' zdjęć'));
