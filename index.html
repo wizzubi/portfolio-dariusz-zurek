@@ -64,6 +64,7 @@ tailwind.config = {
   .fade-x{-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent)}
   .cover-img{transition:transform .6s cubic-bezier(.16,1,.3,1)}
   .group:active .cover-img{transform:scale(1.05)}
+  .clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   /* Before/After slider */
   #ba-wrap{touch-action:none;user-select:none}
   #ba-handle{box-shadow:0 4px 24px rgba(0,0,0,.6)}
@@ -250,7 +251,7 @@ tailwind.config = {
     <div class="img-fallback rounded-2xl overflow-hidden border border-white/15 inline-block max-w-full">
       <img id="lb-img" src="" alt="" class="max-w-full rounded-2xl">
     </div>
-    <figcaption id="lb-cap" class="mt-3 text-sm text-zinc-300 font-bold"></figcaption>
+    <figcaption id="lb-cap" class="mt-3 text-sm text-zinc-200 leading-snug max-w-2xl mx-auto"></figcaption>
     <p id="lb-count" class="text-xs text-zinc-500 mt-1"></p>
   </figure>
 </div>
@@ -263,38 +264,106 @@ tailwind.config = {
      { prefix:'lazienka1', cat:'lazienki', proj:'laz-1', projLabel:'Łazienka 1', count:33 }
    generuje: images/lazienka1 (1).jpg ... images/lazienka1 (33).jpg
    Aby dodać zdjęcia: wgraj pliki i podbij count. Nowy projekt = nowa linijka.
-   Bez indywidualnych podpisów — podpisem jest nazwa projektu.
+   Projekt może mieć opis ogólny (pole desc) pokazywany nad zdjęciami.
+   Podpisy zdjęć dopisz w PHOTO_DESC pod kluczem dokładnej ścieżki pliku.
    Konwencja plików = hurtowa zmiana w Windows:
    zaznacz pliki projektu → F2 → wpisz np. lazienka1 → Enter,
    Windows utworzy: lazienka1 (1).jpg, lazienka1 (2).jpg ...
 ============================================================ */
 const PROJECTS = [
   // --- Łazienki: 83 zdjęcia w 6 projektach ---
-  { prefix:'lazienka1', cat:'lazienki', proj:'laz-1', projLabel:'Łazienka 1', count:33 },
-  { prefix:'lazienka2', cat:'lazienki', proj:'laz-2', projLabel:'Łazienka 2', count:12 },
-  { prefix:'lazienka3', cat:'lazienki', proj:'laz-3', projLabel:'Łazienka 3', count:9 },
-  { prefix:'lazienka4', cat:'lazienki', proj:'laz-4', projLabel:'Łazienka 4', count:2 },
-  { prefix:'lazienka5', cat:'lazienki', proj:'laz-5', projLabel:'Łazienka 5', count:3 },
-  { prefix:'lazienka6', cat:'lazienki', proj:'laz-6', projLabel:'Łazienka 6', count:24 },
+  { prefix:'lazienka1', cat:'lazienki', proj:'laz-1', projLabel:'Łazienka 1 – Elegancki marmur ze strefą umywalkową LED', count:33,
+    desc:'Projekt wykończenia nowoczesnej łazienki w wysokim standardzie. Aranżacja opiera się na połączeniu wielkoformatowych płyt gresowych imitujących ciemny, wyrazisty kamień naturalny z gładką, jasną glazurą. Wyjątkowy klimat wnętrza buduje precyzyjnie zaprojektowane oświetlenie – liniowe paski LED na suficie, podświetlane okrągłe lustro oraz nowoczesne wiszące oprawy geometryczne.' },
+  { prefix:'lazienka2', cat:'lazienki', proj:'laz-2', projLabel:'Łazienka 2 – Marmur Calacatta ze złotą armaturą i ryflowanym drewnem', count:12,
+    desc:'Projekt Łazienki nr 2 łączący jasny spiek wielkoformatowy z szarym żyłkowaniem (styl Calacatta/Statuario) z wyrazistymi, ryflowanymi płytkami o strukturze drewna. Wnętrze dopełniają szklana kabina ze złotymi profilami, elegancka złota armatura oraz podświetlenie LED wydobywające przestrzenną strukturę okładzin ściennych.' },
+  { prefix:'lazienka3', cat:'lazienki', proj:'laz-3', projLabel:'Łazienka 3 – Poddasze w morskim błękicie ze szczotkowanym złotem', count:9,
+    desc:'Przestronna łazienka na poddaszu z oknem dachowym, w której rolę akcentu dekoracyjnego pełnią pionowe, błyszczące płytki w odcieniach morskiego błękitu. Wnętrze wyposażono w wolnostojącą wannę z baterią podtynkową oraz kabinę walk-in z odwodnieniem liniowym. Całość uzupełniają detale ze szczotkowanego złota oraz naturalnego drewna dębowego.' },
+  { prefix:'lazienka4', cat:'lazienki', proj:'laz-4', projLabel:'Łazienka 4 – Nowoczesny motyw Terrazzo (Lastryko)', count:2,
+    desc:'Aranżacja łazienki oparta na motywie wielobarwnego lastryko (terrazzo) na jasnym tle, pokrywającego podłogę, ściany oraz zabudowę meblową. Projekt wyposażono w strefę prysznicową walk-in z odpływem liniowym, biały grzejnik drabinkowy oraz estetycznie zacięte pod kątem 45° krawędzie płyt na zabudowie WC.' },
+  { prefix:'lazienka5', cat:'lazienki', proj:'laz-5', projLabel:'Łazienka 5 – Industrialny grafit z białą żyłą', count:3,
+    desc:'Wykończenie łazienki wielkoformatowymi, grafitowymi płytkami gresowymi z wyraźnym białym żyłkowaniem. Projekt obejmuje montaż kabiny prysznicowej na czarnych profilach, stojącą miskę WC oraz dedykowaną podłączeniowo strefę z instalacją wyrównawczą/buforową.' },
+  { prefix:'lazienka6', cat:'lazienki', proj:'laz-6', projLabel:'Łazienka 6 – Grafitowy beton z podświetlanymi wnękami i cokołem LED', count:24,
+    desc:'Elegancka, kontrastowa łazienka łącząca ciemnografitowe gresy o strukturze betonu z jasnoszarym tłem i ocieplającym drewnem. Cechą charakterystyczną projektu są wielostrefowe podświetlenia LED – podcinana baza wanny, trzypoziomowe wnęki półkowe w drewnie oraz obwodowe podświetlenie lustra.' },
   // --- Płytki i podłogi: pliki podlogi* pokazywane w kategorii "plytki" ---
   { prefix:'podlogi1', cat:'plytki', proj:'podlogi-1', projLabel:'Podłogi 1', count:6 },
   { prefix:'podlogi2', cat:'plytki', proj:'podlogi-2', projLabel:'Podłogi 2', count:2 },
   { prefix:'podlogi3', cat:'plytki', proj:'podlogi-3', projLabel:'Podłogi 3', count:11 },
   // --- Malowanie: 14 zdjęć ---
   { prefix:'malowanie1', cat:'malowanie', proj:'mal-1', projLabel:'Malowanie 1', count:3 },
-  { prefix:'malowanie2', cat:'malowanie', proj:'mal-2', projLabel:'Malowanie 2', count:11 },
+  { prefix:'malowanie2', cat:'malowanie', proj:'mal-2', projLabel:'Sala lekcyjna — remont i malowanie', count:11,
+    desc:'Kompleksowe odświeżenie oraz modernizacja sali lekcyjnej w szkole podstawowej. Prace obejmowały pełne zabezpieczenie przestrzeni i wyposażenia, a następnie zmianę przestarzałego, dwukolorowego układu ścian (żółta lamperia) na jednolitą, jasną i nowoczesną kolorystykę. Dzięki usunięciu podziałów i zastosowaniu jasnych barw wnętrze zyskało na przestronności, stało się jaśniejsze oraz bardziej funkcjonalne dla uczniów i nauczycieli.' },
   // --- Oświetlenie: 13 zdjęć ---
-  { prefix:'oswietlenie1', cat:'oswietlenie', proj:'led-1', projLabel:'Oświetlenie 1', count:11 },
-  { prefix:'oswietlenie2', cat:'oswietlenie', proj:'led-2', projLabel:'Oświetlenie 2', count:2 },
+  { prefix:'oswietlenie1', cat:'oswietlenie', proj:'led-1', projLabel:'Apartament — modernistyczne oświetlenie LED', count:11,
+    desc:'Montaż nowoczesnego, wielostrefowego systemu oświetlenia LED w nowoczesnym mieszkaniu. Projekt opiera się na czarnych profilach natynkowych z podświetleniem obwodowym sufitu, minimalistycznych kinkietach liniowych oraz punktowych reflektorkach natynkowych. Oświetlenie świetnie podkreśla architekturę wnętrza oraz akcentową, zieloną ścianę, tworząc elegancki i klimatyczny nastrój.' },
+  { prefix:'oswietlenie2', cat:'oswietlenie', proj:'led-2', projLabel:'Pokój — sufit z LED RGB', count:2,
+    desc:'Wykonanie sufitu podwieszanego z wielostrefowym, dekoracyjnym oświetleniem LED w pokoju mieszkalnym. Układ obejmuje klasyczne oczka wpuszczane w zabudowę sufitową oraz ukryte we wnękach taśmy LED z możliwością zmiany barwy światła (RGB). Rozwiązanie pozwala na płynną zmianę klimatu pomieszczenia – od funkcjonalnego, ciepłego światła białego po nastrojowe podświetlenie kolorowe.' },
   // --- Zabudowa: 25 zdjęć ---
   { prefix:'zabudowa1', cat:'zabudowa', proj:'zab-1', projLabel:'Zabudowa 1', count:5 },
   { prefix:'zabudowa2', cat:'zabudowa', proj:'zab-2', projLabel:'Zabudowa 2', count:5 },
   { prefix:'zabudowa3', cat:'zabudowa', proj:'zab-3', projLabel:'Zabudowa 3', count:15 },
 ];
+/* Podpisy poszczególnych zdjęć (klucz = dokładna ścieżka pliku).
+   Brak wpisu = karta i lightbox pokazują samą nazwę projektu. */
+const PHOTO_DESC = {
+  'images/lazienka1 (19).jpg':'Strefa prysznicowa w trakcie prac – wielkoformatowe płytki imitujące ciemny kamień oraz liniowe oświetlenie LED na suficie.',
+  'images/lazienka1 (17).jpg':'Strefa umywalkowa z podświetlanym okrągłym lustrem, dekoracyjnymi lampami i czarnym osprzętem elektrycznym.',
+  'images/lazienka1 (5).jpg':'Strefa WC z podwieszaną miską na tle płytkowego stelaża kamiennego, przylegająca do okna w drewnianej ramie.',
+  'images/lazienka1 (25).jpg':'Detal białej szafki meblowej połączonej z blatem i półką wykonanymi z płytek imitujących kamień.',
+  'images/lazienka2 (4).jpg':'Układanie wielkoformatowego gresu na systemach poziomujących oraz montaż stelaża podtynkowego WC.',
+  'images/lazienka2 (3).jpg':'Łączenie płaszczyzn jasnego marmuru z dekoracyjną, ciepłą strukturą drewna podczas prac glazurniczych.',
+  'images/lazienka2 (2).jpg':'Wykończona strefa WC i prysznicowa ze złotą armaturą, szklaną kabiną oraz pionowym grzejnikiem.',
+  'images/lazienka2 (10).jpg':'Przygotowanie strefy prysznica z podtynkowym zestawem, wnękami i kątowym podświetleniem LED.',
+  'images/lazienka2 (8).jpg':'Detal ukrytej pionowej listwy LED podkreślającej trójwymiarowe ryflowania płytek drewnopodobnych.',
+  'images/lazienka3 (2).jpg':'Strefa prysznicowa walk-in ze złotymi profilami, przeźroczystą szybą oraz wbudowaną wnęką na kosmetyki.',
+  'images/lazienka3 (4).jpg':'Wisząca szafka z dębowym frontem wkomponowana w niebieską ścianę obok kabiny prysznicowej.',
+  'images/lazienka3 (5).jpg':'Strefa kąpielowa pod skosem z owalną wanną wolnostojącą pod oknem dachowym.',
+  'images/lazienka3 (8).jpg':'Tło wanny wyłożone morskimi płytkami z podtynkową baterią w kolorze szczotkowanego złota.',
+  'images/lazienka3 (9).jpg':'Widok strefy wanny z wiszącą, litą dębową półką dekoracyjną zamontowaną na błękitnej ścianie.',
+  'images/lazienka3 (7).jpg':'Wykończone jasnymi płytkami podłogowymi podłużne pomieszczenie/wnęka w trakcie prac.',
+  'images/lazienka4 (1).jpg':'Strefa prysznicowa walk-in z odpływem liniowym, podejściem pod baterię i białym grzejnikiem drabinkowym.',
+  'images/lazienka4 (2).jpg':'Precyzyjny detal ukosowania krawędzi (45°) na zabudowie stelaża podtynkowego z płytki lastryko.',
+  'images/lazienka5 (3).jpg':'Wykończona część łazienki ze stojącą miską WC oraz przeszkloną kabiną prysznicową na czarnych profilach.',
+  'images/lazienka5 (1).jpg':'Widok na ściany i podłogę w trakcie układania grafitowego gresu na klipsach poziomujących.',
+  'images/lazienka5 (2).jpg':'Widok na górne naroże pomieszczenia z zamontowanym zbiornikiem instalacyjnym na wspornikach.',
+  'images/lazienka6 (2).jpg':'Montaż i układanie wielkoformatowych płyt betonowych z użyciem systemów poziomujących.',
+  'images/lazienka6 (3).jpg':'Osadzanie wanny prostokątnej oraz kafelkowanie przestrzeni stelaża podtynkowego WC.',
+  'images/lazienka6 (6).jpg':'Konstrukcja i flizowanie słupa instalacyjnego z wbudowaną wnęką półkową.',
+  'images/lazienka6 (7).jpg':'Przygotowanie narożnych podłączeń pod wiszący dwufunkcyjny piec gazowy.',
+  'images/lazienka6 (19).jpg':'Trzypoziomowa wnęka ścienna wyłożona płytkami drewnopodobnymi, podświetlana paskami LED w profilu.',
+  'images/lazienka6 (18).jpg':'Detal ciepłego podświetlenia LED górnej krawędzi drewnianej wnęki półkowej.',
+  'images/lazienka6 (22).jpg':'Obudowana wanna z efektownym podcięciem na stopy podświetlonym dołem listwą LED.',
+  'images/lazienka6 (13).jpg':'Strefa umywalkowa z dużym lustrem posiadającym zintegrowane, obwodowe podświetlenie LED.',
+  'images/lazienka6 (1).jpg':'Strefa WC z podwieszaną miską oraz sąsiadującym, zamontowanym piecem gazowym.',
+  'images/malowanie2 (1).jpg':'Zabezpieczanie sali lekcyjnej przed rozpoczęciem prac – podłoga osłonięta folią i kartonami, na środku ustawiona drabina malarska.',
+  'images/malowanie2 (2).jpg':'Przygotowanie stanowiska pracy – zabezpieczona posadzka oraz meble szkolne zsunięte na środek pomieszczenia.',
+  'images/malowanie2 (3).jpg':'Etap malowania ścian – pokrywanie dotychczasowej żółtej lamperii nową, jasną powłoką malarską.',
+  'images/malowanie2 (4).jpg':'Prace wykończeniowe przy strefie okiennej – zabezpieczone glify, kaloryfery oraz elementy wyposażenia sali.',
+  'images/malowanie2 (5).jpg':'Malowanie wyższych partii ścian i okolic drzwi z wykorzystaniem drabin oraz taśm malarskich.',
+  'images/malowanie2 (6).jpg':'Efekt końcowy po malowaniu – odświeżona ściana w jednolitej tonacji z zamontowaną tablicą szkolną.',
+  'images/malowanie2 (7).jpg':'Gotowa sala lekcyjna po usunięciu zabezpieczeń – czysta, doświetlona przestrzeń z odsłoniętą podłogą i oknami.',
+  'images/malowanie2 (8).jpg':'Zbliżenie na estetycznie wykończoną narożną ścianę po usunięciu taśm i folii ochronnych.',
+  'images/malowanie2 (9).jpg':'Dalszy etap prac malarskich – dokładne krycie i wykończenie powierzchni ścian.',
+  'images/malowanie2 (10).jpg':'Odnowiona przestrzeń przy wejściu do sali – gładkie, jasne ściany i uporządkowane meble.',
+  'images/malowanie2 (11).jpg':'Widok ogólny na ukończoną i uporządkowaną salę lekcyjną gotową do użytku.',
+  'images/oswietlenie1 (1).jpg':'Pionowe kinkiety liniowe montowane na zielonej ścianie akcentowej dające efektowne światło boczne.',
+  'images/oswietlenie1 (2).jpg':'Kolejny widok instalacji oświetleniowej podczas testów i regulacji natężenia światła.',
+  'images/oswietlenie1 (3).jpg':'Podświetlenie obwodowe LED w czarnym profilu sufitowym oraz natynkowa oprawa punktowa.',
+  'images/oswietlenie1 (4).jpg':'Kątowy widok sufitu z czarną listwą LED i włączonym podświetleniem nad strefą okienną.',
+  'images/oswietlenie1 (5).jpg':'Test liniowego oświetlenia obwodowego tworzącego miękką łunę świetlną wzdłuż ścian.',
+  'images/oswietlenie1 (6).jpg':'Poziome kinkiety ścienne w czarnej oprawie rozświetlające gładką, białą ścianę.',
+  'images/oswietlenie1 (7).jpg':'Detal montażowy i świetlny designerskiego kinkietu ściennego o geometrycznym kształcie.',
+  'images/oswietlenie1 (8).jpg':'Zbliżenie na narożnik sufitu z precyzyjnie połączonym profilem LED i ciepłym światłem.',
+  'images/oswietlenie1 (9).jpg':'Detal liniowej oprawy podstropowej emitującej równomierne światło rozproszone.',
+  'images/oswietlenie1 (10).jpg':'Widok sufitu z zamontowanymi czarnymi reflektorami punktowymi oraz obwodową taśmą LED.',
+  'images/oswietlenie1 (11).jpg':'Ogólny widok pomieszczenia w trakcie testów oświetlenia dekoracyjnego (kinkiety pionowe i profile sufitowe).',
+  'images/oswietlenie2 (1).jpg':'Sufit podwieszany z włączonym ukrytym podświetleniem LED w tonacji neutralnej/ciepłej bieli.',
+  'images/oswietlenie2 (2).jpg':'Widok na pomieszczenie z włączonym dekoracyjnym podświetleniem LED w kolorze niebieskim (RGB).',
+};
 const GALLERY = PROJECTS.flatMap(p =>
-  Array.from({ length:p.count }, (_,k)=>({
-    src:`images/${p.prefix} (${k+1}).jpg`, cat:p.cat, proj:p.proj, projLabel:p.projLabel
-  }))
+  Array.from({ length:p.count }, (_,k)=>{
+    const src = `images/${p.prefix} (${k+1}).jpg`;
+    return { src, cat:p.cat, proj:p.proj, projLabel:p.projLabel, pdesc:p.desc||'', desc:PHOTO_DESC[src]||'' };
+  })
 );
 
 const CAT_LABEL = { lazienki:'Łazienki', plytki:'Płytki i Podłogi', malowanie:'Malowanie i Szpachlowanie', oswietlenie:'Oświetlenie', zabudowa:'Zabudowa' };
@@ -351,6 +420,8 @@ function renderSubfilters(){
 
 function cardHTML(item, idx){
   const label = item.projLabel || CAT_LABEL[item.cat];
+  const cap = item.desc
+    ? `<div class="p-3.5 pt-3"><p class="text-[13px] leading-snug text-zinc-300">${item.desc}</p></div>` : '';
   return `
   <article class="fade-item group relative rounded-2xl overflow-hidden border border-white/10 bg-card shadow-premium cursor-zoom-in" data-idx="${idx}" tabindex="0" role="button" aria-label="Powiększ: ${label}">
     <div class="img-fallback relative aspect-[4/3] flex items-center justify-center overflow-hidden">
@@ -360,7 +431,7 @@ function cardHTML(item, idx){
       <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-black/60 border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
         <i class="fa-solid fa-magnifying-glass-plus text-sm"></i>
       </span>
-    </div>
+    </div>${cap}
   </article>`;
 }
 
@@ -417,7 +488,7 @@ function render(scroll=true){
   const groups = new Map();
   filtered.forEach(it=>{
     const key = activeFilter==='all' ? it.cat+'||'+it.proj : it.proj;
-    if(!groups.has(key)) groups.set(key, { cat:it.cat, proj:it.proj, label:it.projLabel||it.proj, items:[] });
+    if(!groups.has(key)) groups.set(key, { cat:it.cat, proj:it.proj, label:it.projLabel||it.proj, pdesc:it.pdesc||'', items:[] });
     groups.get(key).items.push(it);
   });
   const list = [...groups.values()];
@@ -434,6 +505,7 @@ function render(scroll=true){
       return `<section>
         ${backBtnHTML('Wszystkie projekty')}
         ${groupHeaderHTML(g.proj, (activeFilter==='all' ? CAT_LABEL[g.cat]+' • ' : '') + g.label, g.cat, g.items.length)}
+        ${g.pdesc ? `<p class="text-sm text-zinc-300 leading-relaxed mb-4 max-w-3xl">${g.pdesc}</p>` : ''}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           ${slice.map(it=>cardHTML(it, it.i)).join('')}
         </div>
@@ -511,8 +583,8 @@ function showLB(){
   const label = it.projLabel || CAT_LABEL[it.cat];
   lbImg.src = it.src; lbImg.alt = label;
   lbImg.onerror = ()=>{ lbImg.src=''; lbCap.textContent = label; };
-  lbCap.textContent = label + ' • ' + CAT_LABEL[it.cat];
-  lbCount.textContent = (lbPos+1) + ' / ' + lbList.length;
+  lbCap.textContent = it.desc || (label + ' • ' + CAT_LABEL[it.cat]);
+  lbCount.textContent = (lbPos+1) + ' / ' + lbList.length + ' • ' + label;
 }
 function closeLB(){ lb.classList.add('hidden'); lb.classList.remove('flex'); document.body.style.overflow=''; }
 function stepLB(d){ lbPos = (lbPos+d+lbList.length)%lbList.length; showLB(); }
