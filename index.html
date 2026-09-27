@@ -155,11 +155,17 @@ tailwind.config = {
         <div class="absolute inset-0 img-fallback flex items-center justify-center">
           <i class="fa-regular fa-image text-4xl text-zinc-600"></i>
         </div>
-        <img id="ba-after" src="images/after-01.jpg" alt="Po remoncie — efekt wykończenia" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none'">
+        <picture class="absolute inset-0 w-full h-full">
+          <source srcset="images/after-01-1600.webp" type="image/webp">
+          <img id="ba-after" src="images/after-01.jpg" alt="Po remoncie — efekt wykończenia" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" onerror="this.style.display='none'">
+        </picture>
         <!-- BEFORE (wierzch, przycinany) -->
         <div id="ba-before" class="absolute inset-0">
           <div class="absolute inset-0 img-fallback flex items-center justify-center"><i class="fa-regular fa-image text-4xl text-zinc-600"></i></div>
-          <img id="ba-before-img" src="images/before-01.jpg" alt="Przed remontem" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async">
+          <picture class="absolute inset-0 w-full h-full">
+            <source srcset="images/before-01-1600.webp" type="image/webp">
+            <img id="ba-before-img" src="images/before-01.jpg" alt="Przed remontem" class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async">
+          </picture>
         </div>
         <!-- handle line -->
         <div id="ba-line" class="absolute top-0 bottom-0 w-[2px] bg-white/90" style="left:var(--pos,50%)"></div>
@@ -397,6 +403,9 @@ const GALLERY = PROJECTS.flatMap(p => {
 
 const CAT_LABEL = { lazienki:'Łazienki', plytki:'Płytki i Podłogi', malowanie:'Malowanie i Szpachlowanie', oswietlenie:'Oświetlenie', zabudowa:'Zabudowa' };
 const CAT_SHORT = { lazienki:'Łazienki', plytki:'Podłogi', malowanie:'Malowanie', oswietlenie:'Oświetlenie', zabudowa:'Zabudowa' };
+/* Warianty WebP: siatka/okładki -800.webp, lightbox/hero -1600.webp, JPG jako fallback */
+const w800 = src => src.replace(/\.jpe?g$/i, '-800.webp');
+const w1600 = src => src.replace(/\.jpe?g$/i, '-1600.webp');
 const CAT_ICON = { lazienki:'fa-bath', plytki:'fa-layer-group', malowanie:'fa-paint-roller', oswietlenie:'fa-lightbulb', zabudowa:'fa-door-closed' };
 
 /* Wiadomość kontaktowa — kodowana przez encodeURIComponent (polskie znaki) */
@@ -453,11 +462,14 @@ function cardHTML(item, idx){
   const cap = item.desc
     ? `<div class="p-3.5 pt-3"><p class="text-[13px] leading-snug text-zinc-300">${item.desc}</p></div>` : '';
   return `
-  <article class="fade-item group relative rounded-2xl overflow-hidden border border-white/10 bg-card shadow-premium cursor-zoom-in" data-idx="${idx}" tabindex="0" role="button" aria-label="Powiększ: ${label}">
+  <article class="tapable fade-item group relative rounded-2xl overflow-hidden border border-white/10 bg-card shadow-premium cursor-zoom-in" data-idx="${idx}" tabindex="0" role="button" aria-label="Powiększ: ${label}">
     <div class="img-fallback relative aspect-[4/3] flex items-center justify-center overflow-hidden">
       <i class="fa-regular fa-image text-3xl text-zinc-600 absolute"></i>
-      <img src="${item.src}" alt="${label} — Dariusz Żurek" loading="lazy" decoding="async"
-           class="card-img absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
+      <picture class="absolute inset-0 w-full h-full">
+        <source srcset="${w800(item.src)}" type="image/webp">
+        <img src="${item.src}" alt="${label} — Dariusz Żurek" loading="lazy" decoding="async" width="800" height="600"
+             class="card-img absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
+      </picture>
       <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-black/60 border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
         <i class="fa-solid fa-magnifying-glass-plus text-sm"></i>
       </span>
@@ -482,8 +494,11 @@ function coverHTML(g){
   <button data-cover="${g.real}" class="tapable group relative rounded-xl overflow-hidden border border-white/10 bg-card text-left w-full" aria-label="Otwórz realizację: ${g.short}">
     <div class="img-fallback relative aspect-[4/3] flex items-center justify-center overflow-hidden">
       <i class="fa-regular fa-image text-2xl text-zinc-700 absolute"></i>
-      <img src="${first.src}" alt="${g.short} — Dariusz Żurek" loading="lazy" decoding="async" width="800" height="600"
-           class="cover-img absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
+      <picture class="absolute inset-0 w-full h-full">
+        <source srcset="${w800(first.src)}" type="image/webp">
+        <img src="${first.src}" alt="${g.short} — Dariusz Żurek" loading="lazy" decoding="async" width="800" height="600"
+             class="cover-img absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
+      </picture>
     </div>
     <div class="px-2.5 pt-2 pb-2.5">
       <p class="font-bold text-[13px] sm:text-[15px] leading-tight truncate">${g.short}</p>
@@ -611,10 +626,16 @@ function openLB(globalIdx){
 function showLB(){
   const it = lbList[lbPos];
   const label = it.projLabel || CAT_LABEL[it.cat];
-  lbImg.src = it.src; lbImg.alt = label;
-  lbImg.onerror = ()=>{ lbImg.src=''; lbCap.textContent = label; };
+  lbImg.alt = label;
+  lbImg.onerror = function(){
+    lbImg.onerror = function(){ lbImg.src=''; lbCap.textContent = label; };
+    lbImg.src = it.src;
+  };
+  lbImg.src = w1600(it.src);
   lbCap.textContent = it.desc || (label + ' • ' + CAT_LABEL[it.cat]);
   lbCount.textContent = (lbPos+1) + ' / ' + lbList.length + ' • ' + label;
+  const nx = lbList[(lbPos+1)%lbList.length];
+  if(nx){ const pre = new Image(); pre.src = w1600(nx.src); }
 }
 function closeLB(){ lb.classList.add('hidden'); lb.classList.remove('flex'); document.body.style.overflow=''; }
 function stepLB(d){ lbPos = (lbPos+d+lbList.length)%lbList.length; showLB(); }
